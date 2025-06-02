@@ -1,80 +1,58 @@
-using System;
+﻿using System;
+using System.IO;
+
+#nullable enable
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ZenithVirtualAssistant.Services
 {
-    public class SpeechService : IDisposable
+    public class SpeechService
     {
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly SpeechSynthesizer _synthesizer;
+        private readonly string _wakeUpCommand;
+        private readonly string _commandPrefix;
+        private bool _isAwake;
         private readonly OllamaService _ollamaService;
-        private readonly SystemControlService _systemService;
-        private readonly DatabaseService _dbService;
-        private bool _isListeningForCommand;
 
-        public SpeechService()
+        public event Action<string>? OnCommandRecognized;
+
+        public SpeechService(string configPath, OllamaService ollamaService)
         {
+            _ollamaService = ollamaService;
+            var config = JsonSerializer.Deserialize<Config>(File.ReadAllText(configPath));
+            _wakeUpCommand = config.WakeUpCommand;
+            _commandPrefix = config.CommandPrefix;
+
             _recognizer = new SpeechRecognitionEngine();
             _synthesizer = new SpeechSynthesizer();
-            _ollamaService = new OllamaService();
-            _systemService = new SystemControlService();
-            _dbService = new DatabaseService();
-
-            // Set up speech recognition
-            _recognizer.SetInputToDefaultAudioDevice();
-            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
-
-            // Load grammar for "Zenith" wake word
-            var wakeGrammar = new Grammar(new GrammarBuilder("Zenith"));
-            _recognizer.LoadGrammar(wakeGrammar);
-
-            // Load grammar for commands after wake word
-            var commandChoices = new Choices("wake up", "open notepad", "open terminal", "open cmd", "open powershell", "open wsl", "open gitbash");
-            var commandGrammar = new Grammar(new GrammarBuilder(new GrammarBuilder("Zenith") { Culture = System.Globalization.CultureInfo.InvariantCulture }, commandChoices));
-            _recognizer.LoadGrammar(commandGrammar);
+            InitializeRecognizer();
         }
 
-        public void StartListening()
+        private void InitializeRecognizer()
         {
+            var grammar = new Grammar(new GrammarBuilder(new Choices(_wakeUpCommand, $"{_commandPrefix} *")));
+            _recognizer.LoadGrammar(grammar);
+            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+            _recognizer.SetInputToDefaultAudioDevice();
             _recognizer.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-        private async void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        private void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string command = e.Result.Text.ToLower();
-
-            if (command == "zenith")
+            if (command == _wakeUpCommand)
             {
-                _isListeningForCommand = true;
-                Speak("I'm listening. What's your command?");
-                return;
+                _isAwake = true;
+                Speak("Zenith is awake. How can I assist you?");
             }
-
-            if (!_isListeningForCommand) return;
-
-            _isListeningForCommand = false;
-
-            string response = "";
-            if (command == "zenith wake up")
+            else if (_isAwake && command.StartsWith(_commandPrefix))
             {
-                response = await _ollamaService.ProcessCommand("Initialize AI assistant");
-                Speak(response);
+                string actualCommand = command.Substring(_commandPrefix.Length).Trim();
+                OnCommandRecognized?.Invoke(actualCommand);
             }
-            else if (command.StartsWith("zenith open "))
-            {
-                response = _systemService.ExecuteCommand(command);
-                Speak(response);
-            }
-            else
-            {
-                response = await _ollamaService.ProcessCommand(command);
-                Speak(response);
-            }
-
-            // Log to database
-            _dbService.LogCommand(command, response);
         }
 
         public void Speak(string text)
@@ -82,10 +60,18 @@ namespace ZenithVirtualAssistant.Services
             _synthesizer.SpeakAsync(text);
         }
 
-        public void Dispose()
+        public void Stop()
         {
-            _recognizer.Dispose();
-            _synthesizer.Dispose();
+            _recognizer.RecognizeAsyncStop();
+            _synthesizer.SpeakAsyncCancelAll();
+        }
+
+        private class Config
+        {
+            public string OllamaEndpoint { get; set; }
+            public string ModelName { get; set; }
+            public string WakeUpCommand { get; set; }
+            public string CommandPrefix { get; set; }
         }
     }
 }

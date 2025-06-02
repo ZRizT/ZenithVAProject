@@ -1,0 +1,6 @@
+{
+  "OllamaEndpoint": "http://localhost:11434/api/generate",
+  "ModelName": "chevalblanc/gpt-4o-mini:latest",
+  "WakeUpCommand": "zenith wake up",
+  "CommandPrefix": "zenith"
+}

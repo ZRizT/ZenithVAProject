@@ -1,48 +1,53 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace ZenithVirtualAssistant.Services
 {
     public class SystemControlService
     {
-        public string ExecuteCommand(string command)
+        public void ExecuteCommand(string command)
+        {
+            command = command.ToLower().Trim();
+            if (command.StartsWith("open "))
+            {
+                string target = command.Substring(5).Trim();
+                OpenApplicationOrTerminal(target);
+            }
+            else if (command == "shutdown")
+            {
+                Process.Start("shutdown", "/s /t 0");
+            }
+        }
+
+        private void OpenApplicationOrTerminal(string target)
         {
             try
             {
-                if (command.Contains("open notepad"))
+                switch (target)
                 {
-                    Process.Start("notepad.exe");
-                    return "Opening Notepad";
+                    case "notepad":
+                        Process.Start("notepad.exe");
+                        break;
+                    case "cmd":
+                        Process.Start("cmd.exe");
+                        break;
+                    case "powershell":
+                        Process.Start("powershell.exe");
+                        break;
+                    case "gitbash":
+                        Process.Start("C:\\Program Files\\Git\\git-bash.exe");
+                        break;
+                    case "wsl":
+                        Process.Start("wsl.exe");
+                        break;
+                    default:
+                        Process.Start(target);
+                        break;
                 }
-                else if (command.Contains("open cmd"))
-                {
-                    Process.Start("cmd.exe");
-                    return "Opening Command Prompt";
-                }
-                else if (command.Contains("open powershell"))
-                {
-                    Process.Start("powershell.exe");
-                    return "Opening PowerShell";
-                }
-                else if (command.Contains("open wsl"))
-                {
-                    Process.Start("wsl.exe");
-                    return "Opening WSL";
-                }
-                else if (command.Contains("open gitbash"))
-                {
-                    Process.Start("C:\\Program Files\\Git\\git-bash.exe");
-                    return "Opening Git Bash";
-                }
-                else if (command.Contains("open terminal"))
-                {
-                    Process.Start("wt.exe"); // Windows Terminal
-                    return "Opening Windows Terminal";
-                }
-                return "Unknown command";
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                throw new Exception($"Failed to open {target}: {ex.Message}");
             }
         }
     }

@@ -3,10 +3,16 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<ApplicationIcon>Assets\ZenithIcon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
+		<PackageReference Include="System.Speech" Version="9.0.5" />
+		<PackageReference Include="System.Text.Json" Version="9.0.5" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Assets\ZenithIcon.ico" />
+		<Resource Include="Assets\WidgetBackground.png" />
 	</ItemGroup>
 </Project>
