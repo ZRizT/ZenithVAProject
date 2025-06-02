@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using ZenithVirtualAssistant.Services;
 using ZenithVirtualAssistant.Utils;
@@ -20,6 +21,9 @@ namespace ZenithVirtualAssistant
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            var ollamaService = new OllamaService(configPath);
 
             // Initialize services
             _databaseService = new DatabaseService();

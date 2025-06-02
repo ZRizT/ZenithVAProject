@@ -68,10 +68,10 @@ namespace ZenithVirtualAssistant.Services
 
         private class Config
         {
-            public string OllamaEndpoint { get; set; }
-            public string ModelName { get; set; }
-            public string WakeUpCommand { get; set; }
-            public string CommandPrefix { get; set; }
+            public string? OllamaEndpoint { get; set; }
+            public string? ModelName { get; set; }
+            public string? WakeUpCommand { get; set; }
+            public string? CommandPrefix { get; set; }
         }
     }
 }
