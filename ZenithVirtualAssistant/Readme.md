@@ -29,3 +29,5 @@ A C# desktop virtual assistant for Windows 11, built with WPF and .NET 8.0.
 - Say "Zenith wake up" to activate the assistant.
 - Use commands like "Zenith open notepad", "Zenith shutdown", or "Zenith what is the weather?".
 - Right-click the system tray icon to show the main window, widget, or exit.
+
+Project ini didasarkan sebagai penelitian dari karya ilmiah yang berjudul "Implementasi AI dalam Zenith Desktop Virtual Assistant" oleh [Rizki Ramadani].

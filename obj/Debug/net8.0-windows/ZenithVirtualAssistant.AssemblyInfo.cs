@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZenithVirtualAssistant")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c36d3fa95be48a12ffc66768008b0d67011dae98")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5212cc8f53474766d05c23e95e16160b6d38a9b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZenithVirtualAssistant")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZenithVirtualAssistant")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -4,15 +4,31 @@
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon>Assets\ZenithIcon.ico</ApplicationIcon>
+		<Platforms>AnyCPU;x64</Platforms>
+		<UseWindwosForms>True</UseWindwosForms>
 	</PropertyGroup>
+	<ItemGroup>
+	  <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <VersionMinor>4</VersionMinor>
+	    <VersionMajor>2</VersionMajor>
+	    <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
+	  </COMReference>
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
 		<PackageReference Include="System.Speech" Version="9.0.5" />
 		<PackageReference Include="System.Text.Json" Version="9.0.5" />
-
+		<PackageReference Include="System.Windows.Forms" />
+		<Reference Include="System.Windows.Forms" />
+    	<Reference Include="System.Drawing" /> <!-- Required for Icon -->
 	</ItemGroup>
 	<ItemGroup>
 		<Resource Include="Assets\ZenithIcon.ico" />
 		<Resource Include="Assets\WidgetBackground.png" />
+	
 	</ItemGroup>
+
 </Project>
+
+

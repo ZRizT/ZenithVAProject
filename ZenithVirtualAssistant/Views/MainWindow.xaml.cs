@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using ZenithVirtualAssistant.Services;
 using ZenithVirtualAssistant.Models;
 
@@ -18,7 +17,7 @@ namespace ZenithVirtualAssistant.Views
             LoadHistory();
         }
 
-        public void LoadHistory() // Change to public
+        public void LoadHistory()
         {
             HistoryListView.ItemsSource = _databaseService.GetCommandHistory();
         }
